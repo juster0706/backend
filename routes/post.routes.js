@@ -47,6 +47,7 @@ router.get('/bestposts', async (req, res) => {
                     content: item.content,
                     likes: item.likes,
                     views: item.views,
+                    price: item.price,
                     createdAt: item.createdAt,
                     updatedAt: item.updatedAt,
                     photo_url: item.photo_url,
@@ -76,5 +77,39 @@ router.get('/bestposts', async (req, res) => {
     }
 });
 
+
+router.get('/posts/:postId', async (req, res) => {
+    try {
+        const { postId } = req.params;
+        const post = await Posts.findOneAndUpdate(
+            { _id: postId },
+            { $inc: { views: 1 } },
+            { new: true }
+        );
+
+        const result = {
+            postId: post.postId,
+            userId: post.userId,
+            nickname: post.nickname,
+            title: post.title,
+            content: post.content,
+            likes: post.likes,
+            views: post.views,
+            price: post.price,
+            createdAt: post.createdAt,
+            updatedAt: post.updatedAt,
+            photo_url: post.photo_url,
+            location: post.location,
+        };
+
+        const likeCount = await Likes.countDocuments({ postId: postId });
+        result.likeCount = likeCount;
+        
+        res.json({ data: result });
+    } catch (err) {
+        console.error(err);
+        res.status(400).send({ message: '게시글 조회에 실패하였습니다.' });
+    }
+});
 
 module.exports = router;
