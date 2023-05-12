@@ -48,6 +48,8 @@ const uploadImage = multer({
             callback(null, `folder/${date}_${randomNumber}`);
         },
         acl        : 'public-read'
-    })
-
+    }),
+    limits: {
+        fileSize: 25 * 1024 * 1024
+    }
 }); 
