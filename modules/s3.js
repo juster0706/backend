@@ -53,3 +53,7 @@ const uploadImage = multer({
         fileSize: 25 * 1024 * 1024
     }
 }); 
+
+
+
+module.exports = uploadImage;
