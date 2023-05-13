@@ -13,6 +13,7 @@ router.post('/posts', authMiddleware, uploadImage.single('photo'), async (req, r
         const { userId, nickname } = res.locals.user;
         const { title, content, price, location } = req.body;
         const { photo_url } = req;
+        const { current_status } = false;
         if (!title) {
             return res.status(412).json({ message: '게시글 제목의 형식이 일치하지 않습니다.' })
         }
@@ -25,7 +26,7 @@ router.post('/posts', authMiddleware, uploadImage.single('photo'), async (req, r
         if (!location) {
             return res.status(412).json({ message: '장소의 형식이 일치하지 않습니다.' })
         }
-        await Posts.create({ userId, nickname, title, content, photo_url, price, location});
+        await Posts.create({ userId, nickname, title, content, photo_url, price, location, current_status});
         return res.status(200).json({ message: '게시글 작성에 성공하였습니다.' })
     } catch (err) {
         console.error(err);
@@ -35,7 +36,7 @@ router.post('/posts', authMiddleware, uploadImage.single('photo'), async (req, r
 
 router.get('/posts', async (req, res) => {
     try {
-        const posts = await Posts.find().sort("-createdAt"); // 최근 4개의 게시물 조회
+        const posts = await Posts.find().sort("-createdAt"); 
         const results = await Promise.all(posts.map(async (item) => {
             const post = {
                 postId: item.postId,
@@ -49,6 +50,7 @@ router.get('/posts', async (req, res) => {
                 createdAt: item.createdAt,
                 updatedAt: item.updatedAt,
                 photo_url: item.photo_url,
+                current_status: item.current_status,
             };
             const likeCount = await Likes.countDocuments({ postId: item.postId }).catch((err) => {
                 throw new Error('좋아요 수 조회에 실패하였습니다.');
@@ -82,6 +84,7 @@ router.get('/bestposts', async (req, res) => {
                     createdAt: item.createdAt,
                     updatedAt: item.updatedAt,
                     photo_url: item.photo_url,
+                    current_status: item.current_status,
                 };
                 const likeCount = await Likes.countDocuments({ postId: item.postId });
                 post.likeCount = likeCount;
@@ -131,6 +134,7 @@ router.get('/posts/:postId', async (req, res) => {
             updatedAt: post.updatedAt,
             photo_url: post.photo_url,
             location: post.location,
+            current_status: post.current_status,
         };
 
         const likeCount = await Likes.countDocuments({ postId: postId });

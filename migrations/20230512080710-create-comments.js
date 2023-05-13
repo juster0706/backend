@@ -50,6 +50,10 @@ module.exports = {
         defaultValue: Sequelize.fn("now"),
         type: Sequelize.DATE,
       },
+      current_status: {
+        allowNull: false,
+        defaultValue: false,
+      }
     });
   },
   async down(queryInterface, Sequelize) {
