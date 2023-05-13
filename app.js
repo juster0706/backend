@@ -27,9 +27,7 @@ app.use(
 
 // router
 const apiMainRouter = require("./routes/index");
-const apipostpostrouter = require("./routes/post.routes.js")
-//app.use("/api", [apiMainRouter]);
-app.use("/api",[apipostpostrouter])
+app.use("/api", [apiMainRouter]);
 
 // errorHandler
 // app.use(errorHandler);
