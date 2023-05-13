@@ -12,16 +12,16 @@ class PostController {
         
             if (!title) {
                 return res.status(412).json({ message: '게시글 제목의 형식이 일치하지 않습니다.' });
-            }
+            };
             if (!content) {
                 return res.status(412).json({ message: '게시글 내용의 형식이 일치하지 않습니다.' });
-            }
+            };
             if (!price) {
                 return res.status(412).json({ message: '가격의 형식이 일치하지 않습니다.' });
-            }
+            };
             if (!location) {
                 return res.status(412).json({ message: '장소의 형식이 일치하지 않습니다.' });
-            }
+            };
         
             const postData = {
                 userId,
@@ -39,8 +39,8 @@ class PostController {
         } catch (err) {
             console.error(err);
             res.status(400).send({ message: "게시글 조회에 실패하였습니다." });
-        }
-    }
+        };
+    };
 
 
 
@@ -57,7 +57,7 @@ class PostController {
             console.error(err);
             res.status(400).send({ message: "게시글 조회에 실패하였습니다." });
         }
-    }
+    };
 
 
 }

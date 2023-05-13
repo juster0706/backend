@@ -7,7 +7,7 @@ class PostService {
     async createPost(postData) {
         console.log("postData:", postData);
         return await postRepository.create(postData);
-    }
+    };
 
 
 
@@ -37,7 +37,7 @@ class PostService {
         } catch (error) {
             return { error: true, message: error.message };
         }
-    }
-}
+    };
+};
 
 module.exports = PostService;

@@ -43,7 +43,7 @@ router.get('/bestposts', async (req, res) => {
 
         if (results.length === 0) {
             return res.status(412).json({ message: '아직 게시물이 존재하지 않습니다.' });
-        }
+        };
 
         let bestPosts;
         if (results.length < 20) {
@@ -51,7 +51,7 @@ router.get('/bestposts', async (req, res) => {
         } else {
             const sortedPosts = results.sort((a, b) => b.likeCount - a.likeCount);
             bestPosts = sortedPosts.slice(0, 20);
-        }
+        };
         
         res.json(bestPosts);
     } catch (err) {
@@ -93,7 +93,7 @@ router.get('/posts/:postId', async (req, res) => {
     } catch (err) {
         console.error(err);
         res.status(400).send({ message: '게시글 조회에 실패하였습니다.' });
-    }
+    };
 });
 
 router.put('/posts/:postId', authMiddleware,uploadImage.single('photo'), async (req, res) => {
@@ -107,27 +107,27 @@ router.put('/posts/:postId', authMiddleware,uploadImage.single('photo'), async (
         
         if (!title) {
             return res.status(412).json({ message: '게시글 제목의 형식이 일치하지 않습니다.' })
-        }
+        };
         if (!content) {
             return res.status(412).json({ message: '게시글 내용의 형식이 일치하지 않습니다.' })
-        }
+        };
         if (!price) {
             return res.status(412).json({ message: '가격의 형식이 일치하지 않습니다.' })
-        }
+        };
         if (!location) {
             return res.status(412).json({ message: '장소의 형식이 일치하지 않습니다.' })
-        }
+        };
         if (userId === post.userId) {
             const date = new Date();
             await Posts.updateOne({ _id: postId }, { $set: { title: title, content: content, updatedAt: date, photo_url: photo_url, price: price, location:location } })
             return res.status(200).json({ message: '게시글을 수정하였습니다.' });
         } else {
             return res.status(403).json({ errorMessage: '게시글 수정의 권한이 존재하지 않습니다.' });
-        }
+        };
     } catch (err) {
         console.error(err);
         res.status(400).send({ errorMessage: '게시글 수정에 실패하였습니다.' });
-    }
+    };
 });
 
 
@@ -140,18 +140,18 @@ router.delete('/posts/:postId', authMiddleware, async (req, res) => {
 
         if (!post) {
             return res.status(412).json({ message: '게시글이 존재하지 않습니다.' });
-        }
+        };
         
         if (userId === post.userId) {
             await Posts.deleteOne({ _id: postId })
             return res.status(200).json({ message: '게시글을 삭제하였습니다.' });
         } else {
             return res.status(403).json({ errorMessage: '게시글의 삭제 권한이 존재하지 않습니다.' });
-        }
+        };
     } catch (err) {
         console.error(err);
         return res.status(400).send({ errorMessage: '게시글 삭제에 실패하였습니다.' });
-    }
+    };
 });
 
 module.exports = router;
