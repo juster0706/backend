@@ -16,7 +16,7 @@ module.exports = (sequelize, DataTypes) => {
       token_id: {
         allowNull: false,
         autoIncrement: true,
-        primarykey: true,
+        primaryKey: true,
         type: DataTypes.INTEGER,
       },
       token: {

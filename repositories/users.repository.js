@@ -1,4 +1,4 @@
-const { Users } = require("../models");
+const { Users, UserInfos } = require("../models");
 
 class UserRepository {
   // DB에서 중복되는 닉네임 찾기
