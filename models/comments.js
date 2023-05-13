@@ -20,8 +20,8 @@ module.exports = (sequelize, DataTypes) => {
       });
 
       this.hasMany(models.Likes, {
-        sourceKey: "like_id",
-        foreignKey: "like_id",
+        sourceKey: "comment_id",
+        foreignKey: "comment_id",
       });
     }
   }
