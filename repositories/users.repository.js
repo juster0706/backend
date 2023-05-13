@@ -31,6 +31,12 @@ class UserRepository {
     });
     return signupData;
   };
+
+  // 로그인 정보
+  login = async (nickname) => {
+    const loginUser = await Users.findOne({ nickname });
+    return loginUser;
+  };
 }
 
 module.exports = UserRepository;
