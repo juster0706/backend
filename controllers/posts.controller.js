@@ -2,6 +2,8 @@ const PostService = require("../services/post.service");
 const postService = new PostService();
 
 class PostController {
+
+
     createPost = async (req, res) => {
         try {
             const { userId, nickname } = res.locals.user;
@@ -39,6 +41,25 @@ class PostController {
             res.status(400).send({ message: "게시글 조회에 실패하였습니다." });
         }
     }
+
+
+
+    getPosts = async (req, res) => {
+        try {
+            const posts = await postService.getPosts();
+
+            if (posts.error) { 
+                throw new Error(posts.message);
+            }
+
+            res.json(posts);
+        } catch (err) {
+            console.error(err);
+            res.status(400).send({ message: "게시글 조회에 실패하였습니다." });
+        }
+    }
+
+
 }
 
 module.exports = PostController;

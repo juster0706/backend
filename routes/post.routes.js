@@ -11,34 +11,7 @@ router.post('/posts', authMiddleware, uploadImage.single('photo'), async (req, r
 });
 
 router.get('/posts', async (req, res) => {
-    try {
-        const posts = await Posts.find().sort("-createdAt"); 
-        const results = await Promise.all(posts.map(async (item) => {
-            const post = {
-                postId: item.postId,
-                userId: item.userId,
-                nickname: item.nickname,
-                title: item.title,
-                content: item.content,
-                likes: item.likes,
-                views: item.views,
-                price: item.price,
-                createdAt: item.createdAt,
-                updatedAt: item.updatedAt,
-                photo_url: item.photo_url,
-                current_status: item.current_status,
-            };
-            const likeCount = await Likes.countDocuments({ postId: item.postId }).catch((err) => {
-                throw new Error('좋아요 수 조회에 실패하였습니다.');
-            });
-            post.likeCount = likeCount;
-            return post;
-        }));
-        res.json( results );
-    } catch (err) {
-        console.error(err);
-        res.status(400).send({ message: "게시글 조회에 실패하였습니다." });
-    }
+    postController.getPosts(req, res);
 });
 
 
