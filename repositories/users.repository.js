@@ -1,4 +1,4 @@
-const { Users } = require("../models");
+const { Users, UserInfos } = require("../models");
 
 class UserRepository {
   // DB에서 중복되는 닉네임 찾기
@@ -30,6 +30,12 @@ class UserRepository {
       introduction,
     });
     return signupData;
+  };
+
+  // 로그인 정보
+  login = async (nickname) => {
+    const loginUser = await Users.findOne({ nickname });
+    return loginUser;
   };
 }
 
