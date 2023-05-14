@@ -61,6 +61,57 @@ class PostController {
       res.status(400).send({ message: "게시글 조회에 실패하였습니다." });
     }
   };
+
+
+
+  getBestPosts = async (req, res) => {
+    try {
+      const bestPosts = await postsService.getBestPosts();
+      res.json(bestPosts);
+    } catch (err) {
+      console.error(err);
+      res.status(400).send({ message: "게시글 조회에 실패하였습니다." });
+    }
+  };
+
+  getPostById = async (req, res) => {
+    try {
+      const { postId } = req.params;
+      const post = await postsService.getPost(postId);
+      res.json({ data: post });
+    } catch (err) {
+      console.error(err);
+      res.status(400).send({ message: "게시글 조회에 실패하였습니다." });
+    }
+  };
+  
+  updatePost = async (req, res) => {
+    try {
+      const { userId } = res.locals.user;
+      const { postId } = req.params;
+      const { title, content, price, location } = req.body;
+      const { photo_url } = req;
+      await postsService.updatePost(userId, postId, title, content, price, location, photo_url);
+      res.status(200).json({ message: "게시글을 수정하였습니다." });
+    } catch (err) {
+      console.error(err);
+      res.status(400).send({ errorMessage: "게시글 수정에 실패하였습니다." });
+    }
+  };
+  
+  deletePost = async (req, res) => {
+    try {
+      const { userId } = res.locals.user;
+      const { postId } = req.params;
+      await postsService.deletePost(userId, postId);
+      res.status(200).json({ message: "게시글을 삭제하였습니다." });
+    } catch (err) {
+      console.error(err);
+      res.status(400).send({ errorMessage: "게시글 삭제에 실패하였습니다." });
+    }
+  };
+
+
 }
 
 module.exports = PostController;
