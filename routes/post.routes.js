@@ -23,24 +23,24 @@ router.get("/posts", async (req, res) => {
 
 
 router.get("/bestposts", 
-  postsController.getBestPosts);
+  postController.getBestPosts);
 
 
 
 router.get("/posts/:postId", 
-  postsController.getPostById);
+  postController.getPostById);
 
 
 
 router.put("/posts/:postId", 
   authMiddleware, 
   uploadImage.single("photo"), 
-  postsController.updatePost);
+  postController.updatePost);
 
 
 
 router.delete("/posts/:postId", 
   authMiddleware, 
-  postsController.deletePost);
+  postController.deletePost);
 
 module.exports = router;
