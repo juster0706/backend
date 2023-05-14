@@ -89,6 +89,7 @@ class UserController {
 
       // 해당하는 유저가 존재하지 않는 경우
       const loginUser = await this.userService.loginUser(nickname);
+      console.log(loginUser.user_id);
       if (!loginUser || loginUser.password !== password) {
         return res
           .status(412)
@@ -113,8 +114,8 @@ class UserController {
   };
   // 로그아웃 API
   logout = async (req, res, next) => {
-    const user_id = req.params;
-    // const user_id = 1;
+    // const user_id = req.params;
+    const user_id = 2;
     try {
       // logout했을때 db에서 refresh token 제거
       await this.userService.logout(user_id);
