@@ -1,6 +1,6 @@
 const { ref } = require("joi");
 const UserRepository = require("../repositories/users.repository");
-const TokenRepository = require("../repositories/token.repository");
+const TokenRepository = require("../repositories/tokens.repository");
 const jwt = require("jsonwebtoken");
 
 class UserService {
@@ -64,10 +64,7 @@ class UserService {
   // Tokens table에 refresh token 저장
   saveToken = async (loginUser, refreshToken) => {
     const { user_id } = loginUser;
-    const saveRefreshToken = await this.tokenRepository.saveToken(
-      user_id,
-      refreshToken
-    );
+    await this.tokenRepository.saveToken(user_id, refreshToken);
   };
 
   // logout 했을 때, token 삭제

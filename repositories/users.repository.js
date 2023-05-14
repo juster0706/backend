@@ -34,7 +34,7 @@ class UserRepository {
 
   // 로그인 정보
   login = async (nickname) => {
-    const loginUser = await Users.findOne({ nickname });
+    const loginUser = await Users.findOne({ where: { nickname } });
     return loginUser;
   };
 }
