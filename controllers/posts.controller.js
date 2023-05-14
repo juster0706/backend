@@ -12,22 +12,22 @@ class PostController {
         return res
           .status(412)
           .json({ message: "게시글 제목의 형식이 일치하지 않습니다." });
-      }
+      };
       if (!content) {
         return res
           .status(412)
           .json({ message: "게시글 내용의 형식이 일치하지 않습니다." });
-      }
+      };
       if (!price) {
         return res
           .status(412)
           .json({ message: "가격의 형식이 일치하지 않습니다." });
-      }
+      };
       if (!location) {
         return res
           .status(412)
           .json({ message: "장소의 형식이 일치하지 않습니다." });
-      }
+      };
 
       const postData = {
         userId,
@@ -44,7 +44,7 @@ class PostController {
     } catch (err) {
       console.error(err);
       res.status(400).send({ message: "게시글 조회에 실패하였습니다." });
-    }
+    };
   };
 
   getPosts = async (req, res) => {
@@ -53,13 +53,13 @@ class PostController {
 
       if (posts.error) {
         throw new Error(posts.message);
-      }
+      };
 
       res.json(posts);
     } catch (err) {
       console.error(err);
       res.status(400).send({ message: "게시글 조회에 실패하였습니다." });
-    }
+    };
   };
 
 
@@ -71,7 +71,7 @@ class PostController {
     } catch (err) {
       console.error(err);
       res.status(400).send({ message: "게시글 조회에 실패하였습니다." });
-    }
+    };
   };
 
   getPostById = async (req, res) => {
@@ -82,7 +82,7 @@ class PostController {
     } catch (err) {
       console.error(err);
       res.status(400).send({ message: "게시글 조회에 실패하였습니다." });
-    }
+    };
   };
   
   updatePost = async (req, res) => {
@@ -96,7 +96,7 @@ class PostController {
     } catch (err) {
       console.error(err);
       res.status(400).send({ errorMessage: "게시글 수정에 실패하였습니다." });
-    }
+    };
   };
   
   deletePost = async (req, res) => {
@@ -108,7 +108,7 @@ class PostController {
     } catch (err) {
       console.error(err);
       res.status(400).send({ errorMessage: "게시글 삭제에 실패하였습니다." });
-    }
+    };
   };
 
 
