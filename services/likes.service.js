@@ -27,67 +27,77 @@ class LikesService {
   };
 
   postLikeToggle = async (user_id, post_id, likeExist) => {
-    await sequelize.transaction(
-      { isolateLevel: Transaction.ISOLATION_LEVELS.READ_COMMITTED },
-      async (t) => {
-        if (likeExist) {
-          // 2-1. 존재하면 삭제 및 decrease
-          const deleteLikeData = await this.likesRepository.postDeleteLike(
-            user_id,
-            post_id
-          );
+    const t = await sequelize.transaction({
+      isolateLevel: Transaction.ISOLATION_LEVELS.READ_COMMITTED,
+    });
+    try {
+      if (likeExist) {
+        // 2-1. 존재하면 삭제 및 decrease
+        const deleteLikeData = await this.likesRepository.postDeleteLike(
+          user_id,
+          post_id,
+          { transaction: t }
+        );
 
-          const decreaseLikeData = await this.likesRepository.postDecreaseLikes(
-            post_id
-          );
+        await this.likesRepository.postDecreaseLikes(post_id);
+        await t.commit();
 
-          return { message: "댓글 좋아요 취소 완료" };
-        } else {
-          // 2-2. 존재하지 않으면 생성 및 increase
-          const createLikeData = await this.likesRepository.createLike(
-            user_id,
-            post_id
-          );
+        return { message: "댓글 좋아요 취소 완료" };
+      } else {
+        // 2-2. 존재하지 않으면 생성 및 increase
+        const createLikeData = await this.likesRepository.createLike(
+          user_id,
+          post_id,
+          { transaction: t }
+        );
 
-          const increaseLikesData =
-            await this.likesRepository.postIncreaseLikes(post_id);
+        await this.likesRepository.postIncreaseLikes(post_id);
+        await t.commit();
 
-          return { message: "댓글 좋아요 완료" };
-        }
+        return { message: "댓글 좋아요 완료" };
       }
-    );
+    } catch (err) {
+      await t.rollback();
+      return { errorMessage: "좋아요 기능이 실패하였습니다." };
+    }
   };
 
   commentLikeToggle = async (user_id, comment_id, likeExist) => {
-    await sequelize.transaction(
-      { isolateLevel: Transaction.ISOLATION_LEVELS.READ_COMMITTED },
-      async (t) => {
-        if (likeExist) {
-          // 2-1. 존재하면 삭제 및 decrease
-          const deleteLikeData = await this.likesRepository.commentDeleteLike(
-            user_id,
-            comment_id
-          );
+    const t = await sequelize.transaction({
+      isolateLevel: Transaction.ISOLATION_LEVELS.READ_COMMITTED,
+    });
 
-          const decreaseLikeData =
-            await this.likesRepository.commentDecreaseLikes(comment_id);
+    try {
+      if (likeExist) {
+        // 2-1. 존재하면 삭제 및 decrease
+        const deleteLikeData = await this.likesRepository.commentDeleteLike(
+          user_id,
+          comment_id,
+          { transaction: t }
+        );
 
-          return { message: "월드컵 취소 좋아요 완료" };
-        } else {
-          // 2-2. 존재하지 않으면 생성 및 increase
-          const createLikeData = await this.likesRepository.createLike(
-            user_id,
-            post_id,
-            comment_id
-          );
+        await this.likesRepository.commentDecreaseLikes(comment_id);
+        await t.commit();
 
-          const increaseLikesData =
-            await this.likesRepository.commentIncreaseLikes(comment_id);
+        return { message: "월드컵 취소 좋아요 완료" };
+      } else {
+        // 2-2. 존재하지 않으면 생성 및 increase
+        const createLikeData = await this.likesRepository.createLike(
+          user_id,
+          post_id,
+          comment_id,
+          { transaction: t }
+        );
 
-          return { message: "월드컵 좋아요 완료" };
-        }
+        await this.likesRepository.commentIncreaseLikes(comment_id);
+        await t.commit();
+
+        return { message: "월드컵 좋아요 완료" };
       }
-    );
+    } catch (err) {
+      await t.rollback();
+      return { errorMessage: "좋아요 기능이 실패하였습니다." };
+    }
   };
 }
 module.exports = LikesService;
