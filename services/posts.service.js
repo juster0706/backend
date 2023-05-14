@@ -8,7 +8,7 @@ class PostService {
   async createPost(postData) {
     console.log("postData:", postData);
     return await postRepository.create(postData);
-  }
+  };
 
 
 
@@ -54,7 +54,7 @@ class PostService {
 
     if (results.length === 0) {
       throw new Error("아직 게시물이 존재하지 않습니다.");
-    }
+    };
 
     let bestPosts;
     if (results.length < 20) {
@@ -62,7 +62,7 @@ class PostService {
     } else {
       const sortedPosts = results.sort((a, b) => b.likeCount - a.likeCount);
       bestPosts = sortedPosts.slice(0, 20);
-    }
+    };
 
     return bestPosts;
   };
@@ -83,11 +83,11 @@ class PostService {
 
     if (!title || !content || !price || !location) {
       throw new Error("입력 값이 유효하지 않습니다.");
-    }
+    };
 
     if (userId !== post.userId) {
       throw new Error("게시글 수정 권한이 없습니다.");
-    }
+    };
 
     await postsRepository.updatePostById(postId, title, content, price, location, photo_url);
   };
@@ -99,14 +99,14 @@ class PostService {
   
     if (!post) {
       throw new Error("게시글이 존재하지 않습니다.");
-    }
+    };
   
     if (userId !== post.userId) {
       throw new Error("게시글 삭제 권한이 없습니다.");
-    }
+    };
   
     await postsRepository.deletePostById(postId);
   };
-}
+};
 
 module.exports = PostService;
