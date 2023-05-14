@@ -8,13 +8,13 @@ class UserService {
   tokenRepository = new TokenRepository();
 
   // 중복되는 닉네임 찾기
-  existNickname = async (nickname) => {
+  findNickname = async (nickname) => {
     const existNickname = await this.userRepository.findNickname(nickname);
     return existNickname;
   };
 
   // 중복되는 이메일 찾기
-  existEmail = async (email) => {
+  findEmail = async (email) => {
     const existEmail = await this.userRepository.findEmail(email);
     return existEmail;
   };
@@ -28,7 +28,7 @@ class UserService {
     profile_image,
     introduction
   ) => {
-    const signupData = await this.UserRepository.signup(
+    const signupData = await this.userRepository.signup(
       nickname,
       password,
       email,
@@ -46,23 +46,34 @@ class UserService {
   };
 
   // accessToken 생성
-  createAccessToken = async (user_id) => {
-    const accessToken = jwt.sign({ user_id }, "access-secret-key", {
+  createAccessToken = async (loginUser) => {
+    const { user_id } = loginUser;
+    const accessToken = jwt.sign({ user_id: user_id }, "access-secret-key", {
       expiresIn: "1h",
     });
     return accessToken;
   };
   // refreshToken 생성
-  createRefreshToken = async (user_id) => {
-    const refreshToken = jwt.sign({ user_id }, "refresh-secret-key", {
+  createRefreshToken = async () => {
+    const refreshToken = jwt.sign({}, "refresh-secret-key", {
       expiresIn: "14d",
     });
     return refreshToken;
   };
 
   // Tokens table에 refresh token 저장
-  saveRefreshToken = async (user_id, refreshToken) => {
-    await this.TokenRepository(user_id, refreshToken);
+  saveToken = async (loginUser, refreshToken) => {
+    const { user_id } = loginUser;
+    const saveRefreshToken = await this.tokenRepository.saveToken(
+      user_id,
+      refreshToken
+    );
+  };
+
+  // logout 했을 때, token 삭제
+  logout = async (user_id) => {
+    await this.tokenRepository.deleteToken(user_id);
+    return;
   };
 }
 
