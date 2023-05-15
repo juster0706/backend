@@ -77,7 +77,7 @@ class PostController {
   getPostById = async (req, res) => {
     try {
       const { postId } = req.params;
-      const post = await postsService.getPost(postId);
+      const post = await postsService.getPostById(postId);
       res.json({ data: post });
     } catch (err) {
       console.error(err);

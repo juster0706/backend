@@ -69,7 +69,7 @@ class PostService {
 
 
 
-  getPost = async (postId) => {
+  getPostById = async (postId) => {
     const post = await postsRepository.findPostById(postId);
     const likeCount = await postsRepository.getLikeCount(postId);
     post.likeCount = likeCount;
