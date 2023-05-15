@@ -61,7 +61,8 @@ module.exports = async (req, res, next) => {
     next();
   } catch (error) {
     console.error(error);
-    // res.clearCookie("AccessToken", "RefreshToken");
+    res.clearCookie("AccessToken");
+    res.clearCookie("RefreshToken");
     return res
       .status(403)
       .json({ errorMessage: "전달된 쿠키에서 오류가 발생하였습니다." });
