@@ -6,9 +6,8 @@ const postRouter = require("./post.routes");
 const commentRouter = require("./comment.routes");
 const likeRouter = require("./like.routes");
 const mypage_router = require("./mypage.routes");
-//  auth.routes
-router.use("/auth", authRouter);
 
-router.use("/posts", [commentRouter, likeRouter, postRouter]);
+router.use("/auth", authRouter);
+router.use("/posts", [postRouter, commentRouter, likeRouter]);
 router.use("/auth/profile", mypage_router);
 module.exports = router;

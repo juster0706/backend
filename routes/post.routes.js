@@ -6,7 +6,7 @@ const postController = new PostController();
 const uploadImage = require("../modules/s3.js");
 
 router.post(
-  "/posts",
+  "/",
   authMiddleware,
   uploadImage.single("photo"),
   async (req, res) => {
@@ -14,33 +14,21 @@ router.post(
   }
 );
 
-
-
-router.get("/posts", async (req, res) => {
+router.get("/", async (req, res) => {
   postController.getPosts(req, res);
 });
 
+router.get("/best", postController.getBestPosts);
 
+router.get("/:postId", postController.getPostById);
 
-router.get("/bestposts", 
-  postController.getBestPosts);
+router.put(
+  "/:postId",
+  authMiddleware,
+  uploadImage.single("photo"),
+  postController.updatePost
+);
 
-
-
-router.get("/posts/:postId", 
-  postController.getPostById);
-
-
-
-router.put("/posts/:postId", 
-  authMiddleware, 
-  uploadImage.single("photo"), 
-  postController.updatePost);
-
-
-
-router.delete("/posts/:postId", 
-  authMiddleware, 
-  postController.deletePost);
+router.delete("/:postId", authMiddleware, postController.deletePost);
 
 module.exports = router;
