@@ -90,5 +90,15 @@ class MypageRepository {
       }
     );
   };
+  checked_product = async (post_id, user_id) => {
+    return await this.Posts.updateOne(
+      {
+        current_status: true,
+      },
+      {
+        where: { [Op.and]: [{ post_id: post_id }, { user_id: user_id }] },
+      }
+    );
+  };
 }
 module.exports = MypageRepository;

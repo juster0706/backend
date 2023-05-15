@@ -81,5 +81,17 @@ class MyPage {
       return res.status(200).json({ message: "success" });
     } catch (e) {}
   };
+
+  checked_product = async (req, res) => {
+    const { post_id } = req.params;
+    const { user_id } = req.locals.user;
+    try {
+      const checked_product = await this.mypageService.checked_product(
+        post_id,
+        user_id
+      );
+      return res.status(200).json({ message: "거래를 완료하셨습니다" });
+    } catch (e) {}
+  };
 }
 module.exports = MyPage;

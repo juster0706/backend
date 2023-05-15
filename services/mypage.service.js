@@ -58,5 +58,11 @@ class MypageService {
       email
     );
   };
+  checked_product = async (post_id) => {
+    const checked_product = await this.mypageRepository.checked_product(
+      post_id,
+      user_id
+    );
+  };
 }
 module.exports = MypageService;
