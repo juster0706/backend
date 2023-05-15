@@ -12,6 +12,7 @@ router.get(
   mypageController.liked_products
 );
 router.get("/", mypageController.products);
+router.put("/", mypageController.checked_product);
 router.post("/sendEmail", mypageController.send_email);
 router.post("/receiveEmail", mypageController.recieve_email);
 router.get("/sold", page_middle, mypageController.sold_products);
