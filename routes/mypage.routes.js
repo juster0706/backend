@@ -6,15 +6,22 @@ const MypageController = require("../controllers/mypage.controller");
 const mypageController = new MypageController();
 //index router => api/auth/profile
 router.get(
-  "/liked",
-  //  authMiddleware,
+  "/likedProducts",
+  authMiddleware,
   page_middle,
   mypageController.liked_products
 );
-router.get("/", mypageController.products);
-router.post("/sendEmail", mypageController.send_email);
-router.post("/receiveEmail", mypageController.recieve_email);
-router.get("/sold", page_middle, mypageController.sold_products);
+router.get("/products", authMiddleware, page_middle, mypageController.products);
+router.get(
+  "/soldProducts",
+  authMiddleware,
+  page_middle,
+  mypageController.sold_products
+);
+router.put("/:postId", authMiddleware, mypageController.checked_product);
+//router.post("/sendEmail", authMiddleware, mypageController.send_email);
+//router.post("/receiveEmail", authMiddleware, mypageController.recieve_email);
+
 router.put("/", mypageController.updated_info);
 
 module.exports = router;
