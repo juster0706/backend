@@ -1,8 +1,8 @@
 const mypageRepository = require("../repositories/mypage.repository");
-const redisRepository = require("../repositories/redis.repository");
+//const redisRepository = require("../repositories/redis.repository");
 const { UserInfos, Likes, Posts } = require("../models");
 class MypageService {
-  redisRepository = new redisRepository();
+  // redisRepository = new redisRepository();
   mypageRepository = new mypageRepository(UserInfos, Likes, Posts);
 
   liked_products = async (user_id, pagination) => {
@@ -45,19 +45,19 @@ class MypageService {
     );
   };
 
-  send_email = async (email) => {
-    const send_email = await this.redisRepository.sendEmailVerificationCode(
-      email
-    );
-    return send_email;
-  };
+  // send_email = async (email) => {
+  //   const send_email = await this.redisRepository.sendEmailVerificationCode(
+  //     email
+  //   );
+  //   return send_email;
+  // };
 
-  receive_email = async (verified_number, email) => {
-    const recieve_email = await this.redisRepository.receive_email(
-      verified_number,
-      email
-    );
-  };
+  // receive_email = async (verified_number, email) => {
+  //   const recieve_email = await this.redisRepository.receive_email(
+  //     verified_number,
+  //     email
+  //   );
+  // };
   checked_product = async (post_id) => {
     const checked_product = await this.mypageRepository.checked_product(
       post_id,
