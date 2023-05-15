@@ -97,7 +97,7 @@ class MypageRepository {
     );
   };
   checked_product = async (post_id, user_id) => {
-    return await this.Posts.updateOne(
+    return await this.Posts.update(
       {
         current_status: true,
       },
