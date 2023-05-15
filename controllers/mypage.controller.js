@@ -39,7 +39,7 @@ class MyPage {
   };
 
   sold_products = async (req, res) => {
-    const { user_id } = req.locals.user;
+    const { user_id } = res.locals.user;
 
     try {
       const sold_products = await this.mypageService.sold_products(
@@ -81,13 +81,13 @@ class MyPage {
 
   checked_product = async (req, res) => {
     const { post_id } = req.params;
-    const { user_id } = req.locals.user;
+    const { user_id } = res.locals.user;
     try {
       await this.mypageService.checked_product(post_id, user_id);
       return res.status(200).json({ message: "거래를 완료하셨습니다" });
     } catch (e) {
       res.status(400).json({
-        errorMessage: "댓글 작성에 실패하였습니다.",
+        errorMessage: "거래완료에 실패하였습니다.",
       });
     }
   };
