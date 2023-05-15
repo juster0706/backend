@@ -63,10 +63,9 @@ class PostController {
   };
 
 
-
   getBestPosts = async (req, res) => {
     try {
-      const bestPosts = await postsService.getBestPosts();
+      const bestPosts = await postService.getBestPosts();
       res.json(bestPosts);
     } catch (err) {
       console.error(err);
