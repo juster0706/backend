@@ -24,8 +24,8 @@ class PostRepository {
   };
 
   findAllPosts = async () => {
-    return await Posts.find();
-  };
+    return await Posts.findAll();
+};
 
   getPostWithCounts = async (item) => {
     const post = {
