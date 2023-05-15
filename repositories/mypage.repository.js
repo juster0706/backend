@@ -31,8 +31,10 @@ class MypageRepository {
     return liked_products;
   };
   //판매중
-  products = async (user_id, page, limit) => {
+  products = async (user_id, pagination) => {
     const product_list = await this.Posts.findAll({
+      limit: pagination.limit,
+      offset: pagination.offset,
       attributes: [
         "title",
         "content",
@@ -49,8 +51,10 @@ class MypageRepository {
     return product_list;
   };
   //거래완료
-  sold_products = async (user_id, page, limit) => {
+  sold_products = async (user_id, pagination) => {
     const sold_products = await this.Posts.findAll({
+      limit: pagination.limit,
+      offset: pagination.offset,
       attributes: [
         "title",
         "content",

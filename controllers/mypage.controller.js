@@ -21,14 +21,26 @@ class MyPage {
 
   products = async (req, res) => {
     const { user_id } = res.locals.user;
-    const { page, limit } = req.query;
+
     try {
-      const { products, sold_products } = await this.mypageService.products(
+      const products = await this.mypageService.products(
         user_id,
-        page,
-        limit
+        req.pagination
       );
-      return res.status(200).json({ products, sold_products });
+      return res.status(200).json({ products });
+    } catch (e) {}
+  };
+
+  sold_products = async (req, res) => {
+    // const { user_id } = req.locals.user;
+    const user_id = "hawook";
+    try {
+      const sold_products = await this.mypageService.sold_products(
+        user_id,
+        req.pagination
+      );
+
+      return res.status(200).json({ sold_products });
     } catch (e) {}
   };
   updated_info = async (req, res, next) => {
@@ -51,6 +63,23 @@ class MyPage {
     }
   };
 
+  send_email = async (req, res) => {
+    const { email } = req.body;
+    try {
+      const send_email = await this.mypageService.send_email(email);
+      return res.status(200).json({ message: "success" });
+    } catch (e) {}
+  };
   ///이메일 인증
+  recieve_email = async (req, res) => {
+    const { verified_number, email } = req.body;
+    try {
+      const receive_email = await this.mypageService.receive_email(
+        verified_number,
+        email
+      );
+      return res.status(200).json({ message: "success" });
+    } catch (e) {}
+  };
 }
 module.exports = MyPage;
