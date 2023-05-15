@@ -40,7 +40,7 @@ module.exports = async (req, res, next) => {
 
     // access token이 만료되었을때
     if (!isAccessTokenValidate) {
-      const accessTokenId = await tokenRepository.findToken(authRefreshToken);
+      const accessTokenId = await tokenRepository.findTokenId(authRefreshToken);
       if (!accessTokenId) {
         return res.json({
           errorMessage: "Refresh Token의 정보가 서버에 존재하지 않습니다.",
@@ -50,6 +50,7 @@ module.exports = async (req, res, next) => {
 
       // 새로운 access token Responce
       res.cookie("AccessToken", `Bearer ${newAccessToken}`);
+      return res.status(200).json({ newAccessToken });
     }
 
     // authAccessToken의 payload에서 user_id를 가져온다.

@@ -13,7 +13,9 @@ class TokenRepository {
 
   // 새로운 Access Token 발급받을때 Refresh Token으로 user_id 가져오기
   findTokenId = async (authRefreshToken) => {
-    const accessTokenId = await Tokens.findOne({ where: { authRefreshToken } });
+    const accessTokenId = await Tokens.findOne({
+      where: { token: authRefreshToken },
+    });
     const { user_id } = accessTokenId;
 
     return user_id;
