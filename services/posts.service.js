@@ -43,12 +43,12 @@ class PostService {
   };
 
 
-
+  
   getBestPosts = async () => {
-    const posts = await postsRepository.findAllPosts();
+    const posts = await postRepository.findAllPosts();
     const results = await Promise.all(
       posts.map(async (item) => {
-        return await postsRepository.getPostWithCounts(item);
+        return await postRepository.getPostWithCounts(item);
       })
     );
 
@@ -69,7 +69,7 @@ class PostService {
 
 
 
-  getPost = async (postId) => {
+  getPostById = async (postId) => {
     const post = await postsRepository.findPostById(postId);
     const likeCount = await postsRepository.getLikeCount(postId);
     post.likeCount = likeCount;

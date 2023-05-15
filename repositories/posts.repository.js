@@ -1,4 +1,4 @@
-const Posts = require("../models/posts.js");
+const { Posts } = require('../models');
 
 class PostRepository {
 
@@ -8,8 +8,14 @@ class PostRepository {
   };
 
   async getPosts() {
-    return await Posts.find().sort("-createdAt");
-  };
+    return await Posts.findAll({
+        order: [
+            ['createdAt', 'DESC']
+        ],
+    });
+}
+
+
 
   async getLikeCount(postId) {
     return await Likes.countDocuments({ postId: postId }).catch((err) => {
@@ -18,8 +24,8 @@ class PostRepository {
   };
 
   findAllPosts = async () => {
-    return await Posts.find();
-  };
+    return await Posts.findAll();
+};
 
   getPostWithCounts = async (item) => {
     const post = {

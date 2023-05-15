@@ -8,14 +8,17 @@ class MyPage {
     const { user_id } = res.locals.user;
 
     try {
-      const liked_products = await this.mypageService.liked_products(
-        user_id,
-        req.pagination
-      );
+      const { totalPages: totalPages, likedProducts: liked_products } =
+        await this.mypageService.liked_products(user_id, req.pagination);
 
-      return res.status(200).json({ liked_products });
+      return res.status(200).json({
+        totalPages: totalPages,
+        likedProducts: liked_products,
+      });
     } catch (e) {
-      //throw new Error(`412/${error}`);
+      res.status(400).json({
+        errorMessage: "마이페이지 좋아요조회에 오류가 발생하였습니다.",
+      });
     }
   };
 
@@ -28,11 +31,15 @@ class MyPage {
         req.pagination
       );
       return res.status(200).json({ products });
-    } catch (e) {}
+    } catch (e) {
+      res.status(400).json({
+        errorMessage: "마이페이지 판매중조회에 오류가 발생하였습니다.",
+      });
+    }
   };
 
   sold_products = async (req, res) => {
-    const { user_id } = req.locals.user;
+    const { user_id } = res.locals.user;
 
     try {
       const sold_products = await this.mypageService.sold_products(
@@ -41,13 +48,18 @@ class MyPage {
       );
 
       return res.status(200).json({ sold_products });
-    } catch (e) {}
+    } catch (e) {
+      res.status(400).json({
+        errorMessage: "마이페이지 거래완료 조회에 오류가 발생하였습니다.",
+      });
+    }
   };
+
   updated_info = async (req, res, next) => {
-    //const { user_id } = res.locals.users;
-    const user_id = "hawook";
+    const { user_id } = res.locals.users;
+
     try {
-      const { email, location, profile_image, introdunpmction } =
+      const { email, location, profile_image, introduction } =
         await update_info_schema.validateAsync(req.body);
 
       await this.mypageService.updated_info(
@@ -59,7 +71,24 @@ class MyPage {
       );
       return res.status(200).end();
     } catch (e) {
-      return res.json({ message: e.message });
+      return e.isJoi
+        ? res.status(412).json({ errorMessage: e.message })
+        : res.status(400).json({
+            errorMessage: "마이페이지 좋아요조회에 오류가 발생하였습니다.",
+          });
+    }
+  };
+
+  checked_product = async (req, res) => {
+    const { post_id } = req.params;
+    const { user_id } = res.locals.user;
+    try {
+      await this.mypageService.checked_product(post_id, user_id);
+      return res.status(200).json({ message: "거래를 완료하셨습니다" });
+    } catch (e) {
+      res.status(400).json({
+        errorMessage: "거래완료에 실패하였습니다.",
+      });
     }
   };
 
@@ -81,17 +110,5 @@ class MyPage {
   //     return res.status(200).json({ message: "success" });
   //   } catch (e) {}
   // };
-
-  checked_product = async (req, res) => {
-    const { post_id } = req.params;
-    const { user_id } = req.locals.user;
-    try {
-      const checked_product = await this.mypageService.checked_product(
-        post_id,
-        user_id
-      );
-      return res.status(200).json({ message: "거래를 완료하셨습니다" });
-    } catch (e) {}
-  };
 }
 module.exports = MyPage;
