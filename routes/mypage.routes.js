@@ -7,21 +7,25 @@ const mypageController = new MypageController();
 //index router => api/auth/profile
 router.get(
   "/likedProducts",
-  authMiddleware,
+  // authMiddleware,
   page_middle,
   mypageController.liked_products
 );
+
 router.get("/products", authMiddleware, page_middle, mypageController.products);
+
 router.get(
   "/soldProducts",
   authMiddleware,
   page_middle,
   mypageController.sold_products
 );
-router.put("/:postId", authMiddleware, mypageController.checked_product);
-//router.post("/sendEmail", authMiddleware, mypageController.send_email);
-//router.post("/receiveEmail", authMiddleware, mypageController.recieve_email);
+
+router.put("/:post_id", authMiddleware, mypageController.checked_product);
 
 router.put("/", mypageController.updated_info);
+
+//router.post("/sendEmail", authMiddleware, mypageController.send_email);
+//router.post("/receiveEmail", authMiddleware, mypageController.recieve_email);
 
 module.exports = router;
