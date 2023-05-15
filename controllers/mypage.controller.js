@@ -5,8 +5,8 @@ class MyPage {
   mypageService = new MypageService();
 
   liked_products = async (req, res) => {
-    // const { user_id } = res.locals.user;
-    const user_id = 1;
+    const { user_id } = res.locals.user;
+
     try {
       const liked_products = await this.mypageService.liked_products(
         user_id,
@@ -32,8 +32,8 @@ class MyPage {
   };
 
   sold_products = async (req, res) => {
-    // const { user_id } = req.locals.user;
-    const user_id = "hawook";
+    const { user_id } = req.locals.user;
+
     try {
       const sold_products = await this.mypageService.sold_products(
         user_id,
@@ -47,7 +47,7 @@ class MyPage {
     //const { user_id } = res.locals.users;
     const user_id = "hawook";
     try {
-      const { email, location, profile_image, introduction } =
+      const { email, location, profile_image, introdunpmction } =
         await update_info_schema.validateAsync(req.body);
 
       await this.mypageService.updated_info(
@@ -63,24 +63,24 @@ class MyPage {
     }
   };
 
-  send_email = async (req, res) => {
-    const { email } = req.body;
-    try {
-      const send_email = await this.mypageService.send_email(email);
-      return res.status(200).json({ message: "success" });
-    } catch (e) {}
-  };
+  // send_email = async (req, res) => {
+  //   const { email } = req.body;
+  //   try {
+  //     const send_email = await this.mypageService.send_email(email);
+  //     return res.status(200).json({ message: "success" });
+  //   } catch (e) {}
+  // };
   ///이메일 인증
-  recieve_email = async (req, res) => {
-    const { verified_number, email } = req.body;
-    try {
-      const receive_email = await this.mypageService.receive_email(
-        verified_number,
-        email
-      );
-      return res.status(200).json({ message: "success" });
-    } catch (e) {}
-  };
+  // recieve_email = async (req, res) => {
+  //   const { verified_number, email } = req.body;
+  //   try {
+  //     const receive_email = await this.mypageService.receive_email(
+  //       verified_number,
+  //       email
+  //     );
+  //     return res.status(200).json({ message: "success" });
+  //   } catch (e) {}
+  // };
 
   checked_product = async (req, res) => {
     const { post_id } = req.params;
