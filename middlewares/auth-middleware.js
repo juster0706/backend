@@ -2,14 +2,18 @@ const jwt = require("jsonwebtoken");
 const { Users } = require("../models");
 const TokenRepository = require("../repositories/tokens.repository");
 
-tokenRepository = new TokenRepository();
+const tokenRepository = new TokenRepository();
 
 module.exports = async (req, res, next) => {
-  const { AccessToken, RefreshToken } = req.headers;
+  const { AccessToken, RefreshToken } = req.cookies;
+  // console.log(req.headers);
+
   try {
     const [authAccessType, authAccessToken] = (AccessToken ?? "").split(" ");
     const [authRefreshType, authRefreshToken] = (RefreshToken ?? "").split(" ");
 
+    console.log(authAccessToken);
+    console.log(authRefreshToken);
     // access token 존재하지 않을때
     if (authRefreshType !== "Bearer" || !authRefreshToken) {
       return res
@@ -25,7 +29,7 @@ module.exports = async (req, res, next) => {
     }
 
     const isAccessTokenValidate = validateAccessToken(authAccessToken);
-    const isRefreshTokenValidate = validateRefrefhToken(authRefreshToken);
+    const isRefreshTokenValidate = validateRefreshToken(authRefreshToken);
 
     // refresh token이 만료되었을때
     if (!isRefreshTokenValidate) {
@@ -36,9 +40,7 @@ module.exports = async (req, res, next) => {
 
     // access token이 만료되었을때
     if (!isAccessTokenValidate) {
-      const accessTokenId = await this.tokenRepository.findToken(
-        authRefreshToken
-      );
+      const accessTokenId = await tokenRepository.findTokenId(authRefreshToken);
       if (!accessTokenId) {
         return res.json({
           errorMessage: "Refresh Token의 정보가 서버에 존재하지 않습니다.",
@@ -46,8 +48,9 @@ module.exports = async (req, res, next) => {
       }
       const newAccessToken = createAccessToken(accessTokenId);
 
-      // 새로운 access token 응답
+      // 새로운 access token Responce
       res.cookie("AccessToken", `Bearer ${newAccessToken}`);
+      return res.status(200).json({ newAccessToken });
     }
 
     // authAccessToken의 payload에서 user_id를 가져온다.
@@ -58,41 +61,42 @@ module.exports = async (req, res, next) => {
     next();
   } catch (error) {
     console.error(error);
-    res.clearCookie("AccessToken", "RefreshToken");
+    res.clearCookie("AccessToken");
+    res.clearCookie("RefreshToken");
     return res
       .status(403)
       .json({ errorMessage: "전달된 쿠키에서 오류가 발생하였습니다." });
   }
+};
 
-  // access token을 검증한다.
-  validateAccessToken = (authAccessToken) => {
-    try {
-      jwt.verify(authAccessToken, "access-secret-key");
-      return true;
-    } catch (error) {
-      return false;
+// 새로운 access token 생성 함수
+const createAccessToken = (accessTokenId) => {
+  const accessToken = jwt.sign(
+    { user_id: accessTokenId },
+    "access-secret-key",
+    {
+      expiresIn: "1h",
     }
-  };
+  );
+  return accessToken;
+};
 
-  // refresh token을 검증한다.
-  validateRefrefhToken = (authRefreshToken) => {
-    try {
-      jwt.verify(authRefreshToken, "refresh-secret-key");
-      return true;
-    } catch (error) {
-      return false;
-    }
-  };
+// access token 검증 함수
+const validateAccessToken = (authAccessToken) => {
+  try {
+    jwt.verify(authAccessToken, "access-secret-key");
+    return true;
+  } catch (error) {
+    return false;
+  }
+};
 
-  // 새로운 access token 생성
-  createAccessToken = async (accessTokenId) => {
-    const accessToken = jwt.sign(
-      { user_id: accessTokenId },
-      "access-secret-key",
-      {
-        expiresIn: "1h",
-      }
-    );
-    return accessToken;
-  };
+// refresh token 검증 함수
+const validateRefreshToken = (authRefreshToken) => {
+  try {
+    jwt.verify(authRefreshToken, "refresh-secret-key");
+    return true;
+  } catch (error) {
+    return false;
+  }
 };

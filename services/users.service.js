@@ -49,7 +49,7 @@ class UserService {
   createAccessToken = async (loginUser) => {
     const { user_id } = loginUser;
     const accessToken = jwt.sign({ user_id: user_id }, "access-secret-key", {
-      expiresIn: "1h",
+      expiresIn: "1s",
     });
     return accessToken;
   };

@@ -115,11 +115,12 @@ class UserController {
   // 로그아웃 API
   logout = async (req, res, next) => {
     // const user_id = req.params;
-    const user_id = 2;
+    const user_id = 1;
     try {
       // logout했을때 db에서 refresh token 제거
       await this.userService.logout(user_id);
-      res.clearCookie("AccessToken", "RefreshToken");
+      res.clearCookie("AccessToken");
+      res.clearCookie("RefreshToken");
 
       return res.status(200).json({ message: "로그아웃에 성공하였습니다." });
     } catch (error) {
