@@ -41,10 +41,10 @@ class PostController {
         current_status: false,
       };
       await postService.createPost(postData);
-      return res.status(200).json({ message: "게시글 작성에 성공하였습니다." });
+      return res.status(201).json({ message: "게시글 작성에 성공하였습니다." });
     } catch (err) {
       console.error(err);
-      res.status(400).send({ message: "게시글 조회에 실패하였습니다." });
+      res.status(400).send({ message: "게시글 작성에 실패하였습니다." });
     };
   };
 
