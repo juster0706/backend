@@ -20,7 +20,6 @@ class PostRepository {
 
 
   async getLikeCount(post_id) {
-    console.log(post_id)
     return await Likes.count({ post_id: post_id }).catch((err) => {
       throw new Error("좋아요 수 조회에 실패하였습니다.");
     });
@@ -55,44 +54,34 @@ class PostRepository {
 
 
   findPostById = async (post_id) => {
-    const post = await Posts.findOneAndUpdate(
-      { _id: post_id },
-      { $inc: { views: 1 } },
-      { new: true }
-    );
+    await Posts.increment('views', { where: { post_id } });
+    const post = await Posts.findByPk(post_id);
     return post;
   };
   
 
   
-  async getLikeCount(post_id) {
-    console.log(post_id)
-      return await Likes.count({post_id: post_id}).catch((err)=>{
-        throw new Error("좋아요 수 조회에 실패하였습니다!")
-      })
-  }
-  
 
 
   updatePostById = async (post_id, title, content, price, location, photo_url) => {
     const date = new Date();
-    await Posts.updateOne(
-      { _id: post_id },
+    await Posts.update(
       {
-        $set: {
-          title: title,
-          content: content,
-          updatedAt: date,
-          photo_url: photo_url,
-          price: price,
-          location: location,
-        },
+        title: title,
+        content: content,
+        updatedAt: date,
+        photo_url: photo_url,
+        price: price,
+        location: location,
+      },
+      {
+        where: { post_id: post_id }
       }
     );
   };
   
   deletePostById = async (post_id) => {
-    await Posts.deleteOne({ _id: post_id });
+    await Posts.destroy({ post_id });
   };
   
 };

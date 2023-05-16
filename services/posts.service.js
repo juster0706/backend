@@ -1,4 +1,5 @@
 const PostRepository = require("../repositories/posts.repository");
+const { post } = require("../routes");
 const postRepository = new PostRepository();
 
 class PostService {
@@ -45,10 +46,10 @@ class PostService {
 
   
   getBestPosts = async () => {
-    const posts = await postRepository.getPostWithCounts();
+    const posts = await postRepository.getPosts();
     const results = await Promise.all(
       posts.map(async (item) => {
-        return await postRepository.getPostWithCounts(item.id);
+        return await postRepository.getPosts(item);
       })
     );
   
@@ -70,32 +71,30 @@ class PostService {
 
 
   getPostById = async (post_id) => {
-    const post = await postsRepository.findPostById(post_id);
-    const likeCount = await postsRepository.getLikeCount(post_id);
-    post.likeCount = likeCount;
+    const post = await postRepository.findPostById(post_id);
     return post;
   };
 
 
 
   updatePost = async (user_id, post_id, title, content, price, location, photo_url) => {
-    const post = await postsRepository.findPostById(post_id);
+    const post = await postRepository.findPostById(post_id);
 
     if (!title || !content || !price || !location) {
       throw new Error("입력 값이 유효하지 않습니다.");
     };
 
-    if (userId !== post.user_Id) {
+    if (user_id !== post.user_id) {
       throw new Error("게시글 수정 권한이 없습니다.");
     };
 
-    await postsRepository.updatePostById(post_id, title, content, price, location, photo_url);
+    await postRepository.updatePostById(post_id, title, content, price, location, photo_url);
   };
 
 
 
   deletePost = async (user_id, post_id) => {
-    const post = await postsRepository.findPostById(post_id);
+    const post = await postRepository.findPostById(post_id);
   
     if (!post) {
       throw new Error("게시글이 존재하지 않습니다.");
@@ -105,7 +104,7 @@ class PostService {
       throw new Error("게시글 삭제 권한이 없습니다.");
     };
   
-    await postsRepository.deletePostById(post_id);
+    await postRepository.deletePostById(post_id);
   };
 };
 
