@@ -92,9 +92,10 @@ class UserController {
   // 닉네임 중복 확인
   checkNickname = async (req, res, next) => {
     const { nickname } = req.body;
+    const nicknameFilter = /^[a-zA-Z0-9]{6,}/gi;
     try {
       const existNickname = await this.userService.findNickname(nickname);
-      if (existNickname) {
+      if (existNickname || !nicknameFilter.test(nickname)) {
         return res.status(412).json({ message: false });
       }
       return res.status(200).json({ message: true });
