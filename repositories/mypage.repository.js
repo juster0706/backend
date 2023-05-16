@@ -18,6 +18,7 @@ class MypageRepository {
         {
           model: this.Posts,
           attributes: [
+            "post_id",
             "title",
             "content",
             "price",
@@ -38,10 +39,16 @@ class MypageRepository {
   };
   //판매중
   products = async (user_id, pagination) => {
+    const totalCount = await this.Posts.count({
+      where: { [Op.and]: [{ current_status: false }, { user_id: user_id }] },
+    });
+    const totalPages = Math.ceil(totalCount / pagination.limit);
+    console.log(totalCount);
     const product_list = await this.Posts.findAll({
       limit: pagination.limit,
       offset: pagination.offset,
       attributes: [
+        "post_id",
         "title",
         "content",
         "price",
@@ -54,14 +61,15 @@ class MypageRepository {
       },
     });
 
-    return product_list;
+    return { totalPages, product_list };
   };
   //거래완료
   sold_products = async (user_id, pagination) => {
-    const sold_products = await this.Posts.findAll({
+    const { count, rows: sold_products } = await this.Posts.findAndCountAll({
       limit: pagination.limit,
       offset: pagination.offset,
       attributes: [
+        "post_id",
         "title",
         "content",
         "price",
@@ -74,7 +82,9 @@ class MypageRepository {
       },
     });
 
-    return sold_products;
+    const totalPages = Math.ceil(count / pagination.limit);
+
+    return { totalPages, sold_products };
   };
 
   updated_info = async (
@@ -84,7 +94,7 @@ class MypageRepository {
     introduction,
     user_id
   ) => {
-    return await this.UserInfos.updateOne(
+    return await this.UserInfos.update(
       {
         email,
         location,
@@ -96,6 +106,7 @@ class MypageRepository {
       }
     );
   };
+
   checked_product = async (post_id, user_id) => {
     return await this.Posts.update(
       {
