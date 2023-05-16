@@ -5,9 +5,8 @@ const TokenRepository = require("../repositories/tokens.repository");
 const tokenRepository = new TokenRepository();
 
 module.exports = async (req, res, next) => {
-  const { AccessToken, RefreshToken } = req.headers;
+  let { AccessToken, RefreshToken } = req.headers;
   // const { AccessToken, RefreshToken } = req.cookies;
-
   try {
     AccessToken = !req.headers.RefreshToken
       ? req.cookies.AccessToken
