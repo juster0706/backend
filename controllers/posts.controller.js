@@ -103,7 +103,7 @@ class PostController {
     try {
       const { user_id } = res.locals.user;
       const { post_id } = req.params;
-      await postsService.deletePost(user_id, post_id);
+      await postService.deletePost(user_id, post_id);
       res.status(200).json({ message: "게시글을 삭제하였습니다." });
     } catch (err) {
       console.error(err);

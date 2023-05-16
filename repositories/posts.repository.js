@@ -75,13 +75,15 @@ class PostRepository {
         location: location,
       },
       {
-        where: { post_id: post_id }
+        where: { post_id }
       }
     );
   };
   
   deletePostById = async (post_id) => {
-    await Posts.destroy({ post_id });
+    await Posts.destroy({
+      where: { post_id }
+    });
   };
   
 };
