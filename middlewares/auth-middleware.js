@@ -9,6 +9,14 @@ module.exports = async (req, res, next) => {
   // const { AccessToken, RefreshToken } = req.cookies;
 
   try {
+    AccessToken = !req.headers.RefreshToken
+      ? req.cookies.AccessToken
+      : AccessToken;
+
+    RefreshToken = !req.headers.RefreshToken
+      ? req.cookies.RefreshToken
+      : RefreshToken;
+
     const [authAccessType, authAccessToken] = (AccessToken ?? "").split(" ");
     const [authRefreshType, authRefreshToken] = (RefreshToken ?? "").split(" ");
 
