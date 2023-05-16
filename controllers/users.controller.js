@@ -89,6 +89,48 @@ class UserController {
     }
   };
 
+  // 닉네임 중복 확인
+  checkNickname = async (req, res, next) => {
+    const { nickname } = req.body;
+    try {
+      const existNickname = await this.userService.findNickname(nickname);
+      if (existNickname) {
+        return res.status(412).json({ message: false });
+      }
+      return res.status(200).json({ message: true });
+    } catch (error) {
+      console.error(error);
+      return res
+        .status(412)
+        .json({ errorMessage: "닉네임 중복 확인에 실패하였습니다." });
+    }
+  };
+
+  // 회원탈퇴 API
+  deleteSignup = async (req, res, next) => {
+    const { user_id } = res.locals.user;
+    const { nickname, password } = req.body;
+
+    try {
+      const existUser = await this.userService.findNickname(nickname);
+
+      if (existUser.nickname === nickname && existUser.password === password) {
+        return res
+          .status(412)
+          .json({ errorMessage: "닉네임 또는 패스워드를 확인해주세요." });
+      }
+      if (user_id === existUser.user_id) {
+        await this.userService.deleteSignup(user_id);
+        return res.status(200).json({ message: "회원탈퇴에 성공하였습니다." });
+      }
+    } catch (error) {
+      console.error(error);
+      return res
+        .status(400)
+        .json({ errorMessage: "회원탈퇴에 실패하였습니다." });
+    }
+  };
+
   // 로그인 API
   login = async (req, res, next) => {
     try {
