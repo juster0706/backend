@@ -1,4 +1,6 @@
-const { Posts } = require('../models');
+const { Posts,Likes } = require('../models');
+require('dotenv').config();
+
 
 class PostRepository {
 
@@ -17,8 +19,8 @@ class PostRepository {
 
 
 
-  async getLikeCount(postId) {
-    return await Likes.countDocuments({ postId: postId }).catch((err) => {
+  async getLikeCount(post_id) {
+    return await Likes.count({ post_id: post_id }).catch((err) => {
       throw new Error("좋아요 수 조회에 실패하였습니다.");
     });
   };
@@ -29,8 +31,8 @@ class PostRepository {
 
   getPostWithCounts = async (item) => {
     const post = {
-      postId: item.postId,
-      userId: item.userId,
+      post_id: item.post_id,
+      user_id: item.user_id,
       nickname: item.nickname,
       title: item.title,
       content: item.content,
@@ -43,7 +45,7 @@ class PostRepository {
       current_status: item.current_status,
     };
   
-    const likeCount = await Likes.countDocuments({ postId: item.postId });
+    const likeCount = await Likes.count({ post_id: item.post_id });
     post.likeCount = likeCount;
   
     return post;
@@ -51,38 +53,37 @@ class PostRepository {
 
 
 
-  findPostById = async (postId) => {
-    const post = await Posts.findOneAndUpdate(
-      { _id: postId },
-      { $inc: { views: 1 } },
-      { new: true }
-    );
+  findPostById = async (post_id) => {
+    await Posts.increment('views', { where: { post_id } });
+    const post = await Posts.findByPk(post_id);
     return post;
   };
   
-  getLikeCount = async (postId) => {
-    return await Likes.countDocuments({ postId: postId });
-  };
+
   
-  updatePostById = async (postId, title, content, price, location, photo_url) => {
+
+
+  updatePostById = async (post_id, title, content, price, location, photo_url) => {
     const date = new Date();
-    await Posts.updateOne(
-      { _id: postId },
+    await Posts.update(
       {
-        $set: {
-          title: title,
-          content: content,
-          updatedAt: date,
-          photo_url: photo_url,
-          price: price,
-          location: location,
-        },
+        title: title,
+        content: content,
+        updatedAt: date,
+        photo_url: photo_url,
+        price: price,
+        location: location,
+      },
+      {
+        where: { post_id }
       }
     );
   };
   
-  deletePostById = async (postId) => {
-    await Posts.deleteOne({ _id: postId });
+  deletePostById = async (post_id) => {
+    await Posts.destroy({
+      where: { post_id }
+    });
   };
   
 };

@@ -4,7 +4,7 @@ const postService = new PostService();
 class PostController {
   createPost = async (req, res) => {
     try {
-      const { userId, nickname } = res.locals.user;
+      const { user_id, nickname } = res.locals.user;
       const { title, content, price, location } = req.body;
       const { photo_url } = req;
 
@@ -30,13 +30,14 @@ class PostController {
       };
 
       const postData = {
-        userId,
+        user_id,
         nickname,
         title,
         content,
         photo_url,
         price,
         location,
+        likes: 0,
         current_status: false,
       };
       await postService.createPost(postData);
@@ -75,8 +76,8 @@ class PostController {
 
   getPostById = async (req, res) => {
     try {
-      const { postId } = req.params;
-      const post = await postsService.getPostById(postId);
+      const { post_id } = req.params;
+      const post = await postService.getPostById(post_id);
       res.json({ data: post });
     } catch (err) {
       console.error(err);
@@ -86,11 +87,11 @@ class PostController {
   
   updatePost = async (req, res) => {
     try {
-      const { userId } = res.locals.user;
-      const { postId } = req.params;
+      const { user_id } = res.locals.user;
+      const { post_id } = req.params;
       const { title, content, price, location } = req.body;
       const { photo_url } = req;
-      await postsService.updatePost(userId, postId, title, content, price, location, photo_url);
+      await postService.updatePost(user_id, post_id, title, content, price, location, photo_url);
       res.status(200).json({ message: "게시글을 수정하였습니다." });
     } catch (err) {
       console.error(err);
@@ -100,9 +101,9 @@ class PostController {
   
   deletePost = async (req, res) => {
     try {
-      const { userId } = res.locals.user;
-      const { postId } = req.params;
-      await postsService.deletePost(userId, postId);
+      const { user_id } = res.locals.user;
+      const { post_id } = req.params;
+      await postService.deletePost(user_id, post_id);
       res.status(200).json({ message: "게시글을 삭제하였습니다." });
     } catch (err) {
       console.error(err);
