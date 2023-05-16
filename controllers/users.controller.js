@@ -5,8 +5,15 @@ class UserController {
 
   // 회원가입 API
   signup = async (req, res, next) => {
-    const { nickname, password, email, location, profile_image, introduction } =
-      req.body;
+    const {
+      nickname,
+      password,
+      confirmpassword,
+      email,
+      location,
+      profile_image,
+      introduction,
+    } = req.body;
     try {
       const nicknameFilter = /^[a-zA-Z0-9]{6,}/gi;
       const passwordFilter = /[a-zA-Z0-9]{8,}/gi;
@@ -39,6 +46,13 @@ class UserController {
         return res
           .status(412)
           .json({ errorMessage: "패스워드에 닉네임이 포함되어 있습니다." });
+      }
+
+      // password 가 confirmpassword와 다른 경우
+      if (password !== confirmpassword) {
+        return res
+          .status(412)
+          .json({ errorMessage: "패스워드가 일치하지 않습니다." });
       }
       // 닉네임이 중복된 경우
       if (existNickname) {
