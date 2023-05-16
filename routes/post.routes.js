@@ -20,15 +20,15 @@ router.get("/", async (req, res) => {
 
 router.get("/best", postController.getBestPosts);
 
-router.get("/:postId", postController.getPostById);
+router.get("/:post_id", postController.getPostById);
 
 router.put(
-  "/:postId",
+  "/:post_id",
   authMiddleware,
   uploadImage.single("photo"),
   postController.updatePost
 );
 
-router.delete("/:postId", authMiddleware, postController.deletePost);
+router.delete("/:post_id", authMiddleware, postController.deletePost);
 
 module.exports = router;

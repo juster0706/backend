@@ -18,8 +18,8 @@ class PostService {
       const results = await Promise.all(
         posts.map(async (item) => {
           const post = {
-            postId: item.postId,
-            userId: item.userId,
+            post_id: item.post_id,
+            user_id: item.user_id,
             nickname: item.nickname,
             title: item.title,
             content: item.content,
@@ -31,7 +31,7 @@ class PostService {
             photo_url: item.photo_url,
             current_status: item.current_status,
           };
-          const likeCount = await postRepository.getLikeCount(item.postId);
+          const likeCount = await postRepository.getLikeCount(item.post_id);
           post.likeCount = likeCount;
           return post;
         })
@@ -69,43 +69,43 @@ class PostService {
 
 
 
-  getPostById = async (postId) => {
-    const post = await postsRepository.findPostById(postId);
-    const likeCount = await postsRepository.getLikeCount(postId);
+  getPostById = async (post_id) => {
+    const post = await postsRepository.findPostById(post_id);
+    const likeCount = await postsRepository.getLikeCount(post_id);
     post.likeCount = likeCount;
     return post;
   };
 
 
 
-  updatePost = async (userId, postId, title, content, price, location, photo_url) => {
-    const post = await postsRepository.findPostById(postId);
+  updatePost = async (user_id, post_id, title, content, price, location, photo_url) => {
+    const post = await postsRepository.findPostById(post_id);
 
     if (!title || !content || !price || !location) {
       throw new Error("입력 값이 유효하지 않습니다.");
     };
 
-    if (userId !== post.userId) {
+    if (userId !== post.user_Id) {
       throw new Error("게시글 수정 권한이 없습니다.");
     };
 
-    await postsRepository.updatePostById(postId, title, content, price, location, photo_url);
+    await postsRepository.updatePostById(post_id, title, content, price, location, photo_url);
   };
 
 
 
-  deletePost = async (userId, postId) => {
-    const post = await postsRepository.findPostById(postId);
+  deletePost = async (user_id, post_id) => {
+    const post = await postsRepository.findPostById(post_id);
   
     if (!post) {
       throw new Error("게시글이 존재하지 않습니다.");
     };
   
-    if (userId !== post.userId) {
+    if (user_id !== post.user_id) {
       throw new Error("게시글 삭제 권한이 없습니다.");
     };
   
-    await postsRepository.deletePostById(postId);
+    await postsRepository.deletePostById(post_id);
   };
 };
 

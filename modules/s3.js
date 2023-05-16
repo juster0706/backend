@@ -43,7 +43,7 @@ const uploadImage = multer({
                 return callback(new Error('확장자 에러'));
             }
             const photo_url = `https://karyl.s3.ap-northeast-2.amazonaws.com/folder/${date}_${randomNumber}`
-            req.photo_ip = photo_url;
+            req.photo_url = photo_url;
 
             callback(null, `folder/${date}_${randomNumber}`);
         },
