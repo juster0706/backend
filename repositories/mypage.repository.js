@@ -8,6 +8,9 @@ class MypageRepository {
   }
 
   liked_products = async (user_id, pagination) => {
+    const totalCount = await this.Likes.count({ where: { user_id: user_id } });
+    const totalPages = Math.ceil(totalCount / pagination.limit);
+
     const liked_products = await this.Likes.findAll({
       limit: pagination.limit, //보여줄것들!!!
       offset: pagination.offset,
@@ -28,7 +31,10 @@ class MypageRepository {
       attributes: [],
       order: [[this.Posts, "createdAt"]],
     });
-    return liked_products;
+    return {
+      totalPages: totalPages,
+      likedProducts: liked_products,
+    };
   };
   //판매중
   products = async (user_id, pagination) => {
@@ -78,7 +84,7 @@ class MypageRepository {
     introduction,
     user_id
   ) => {
-    await this.UserInfos.updateOne(
+    return await this.UserInfos.updateOne(
       {
         email,
         location,
@@ -91,7 +97,7 @@ class MypageRepository {
     );
   };
   checked_product = async (post_id, user_id) => {
-    return await this.Posts.updateOne(
+    return await this.Posts.update(
       {
         current_status: true,
       },

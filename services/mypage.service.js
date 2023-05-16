@@ -7,11 +7,12 @@ class MypageService {
 
   liked_products = async (user_id, pagination) => {
     console.log(pagination);
-    const likedProducts = await this.mypageRepository.liked_products(
-      user_id,
-      pagination
-    );
-    return likedProducts;
+    const { totalPages: totalPages, likedProducts: liked_products } =
+      await this.mypageRepository.liked_products(user_id, pagination);
+    return {
+      totalPages: totalPages,
+      likedProducts: liked_products,
+    };
   };
 
   products = async (user_id, pagination) => {
@@ -59,10 +60,7 @@ class MypageService {
   //   );
   // };
   checked_product = async (post_id) => {
-    const checked_product = await this.mypageRepository.checked_product(
-      post_id,
-      user_id
-    );
+    return await this.mypageRepository.checked_product(post_id, user_id);
   };
 }
 module.exports = MypageService;
