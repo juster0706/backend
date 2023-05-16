@@ -5,7 +5,8 @@ class LikesRepository {
   getPostLiked = async (user_id, post_id) => {
     const getPostLikedData = await Likes.findOne({
       where: {
-        [Op.and]: [{ post_id }, { user_id }],
+        post_id,
+        user_id,
       },
     });
     return getPostLikedData;
@@ -34,11 +35,11 @@ class LikesRepository {
     return deleteLikeData;
   };
 
-  createLike = async (user_id, post_id, comment_id) => {
+  createPostLike = async (user_id, post_id) => {
+    console.log("라잌레포", user_id, post_id);
     const createLikeData = await Likes.create({
       user_id,
       post_id,
-      comment_id,
     });
     return createLikeData;
   };
@@ -59,6 +60,16 @@ class LikesRepository {
 
     const increaseLikesData = await findLikesData.increment("likes", { by: 1 });
     return increaseLikesData;
+  };
+
+  createCommentLike = async (user_id, post_id, comment_id) => {
+    console.log("라잌레포", user_id, post_id, comment_id);
+    const createLikeData = await Likes.create({
+      user_id,
+      post_id,
+      comment_id,
+    });
+    return createLikeData;
   };
 
   commentDecreaseLikes = async (comment_id) => {
