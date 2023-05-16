@@ -48,15 +48,15 @@ class UserService {
   // accessToken 생성
   createAccessToken = async (loginUser) => {
     const { user_id } = loginUser;
-    const accessToken = jwt.sign({ user_id: user_id }, "access-secret-key", {
-      expiresIn: "1s",
+    const accessToken = jwt.sign({ user_id: user_id }, process.env.ACCESS_KEY, {
+      expiresIn: process.env.ACCESS_EXPIRES,
     });
     return accessToken;
   };
   // refreshToken 생성
   createRefreshToken = async () => {
-    const refreshToken = jwt.sign({}, "refresh-secret-key", {
-      expiresIn: "14d",
+    const refreshToken = jwt.sign({}, process.env.REFRESH_KEY, {
+      expiresIn: process.env.REFRESH_EXPIRES,
     });
     return refreshToken;
   };

@@ -5,15 +5,13 @@ const TokenRepository = require("../repositories/tokens.repository");
 const tokenRepository = new TokenRepository();
 
 module.exports = async (req, res, next) => {
-  const { AccessToken, RefreshToken } = req.cookies;
-  // console.log(req.headers);
+  const { AccessToken, RefreshToken } = req.headers;
+  // const { AccessToken, RefreshToken } = req.cookies;
 
   try {
     const [authAccessType, authAccessToken] = (AccessToken ?? "").split(" ");
     const [authRefreshType, authRefreshToken] = (RefreshToken ?? "").split(" ");
 
-    console.log(authAccessToken);
-    console.log(authRefreshToken);
     // access token 존재하지 않을때
     if (authRefreshType !== "Bearer" || !authRefreshToken) {
       return res
@@ -54,7 +52,7 @@ module.exports = async (req, res, next) => {
     }
 
     // authAccessToken의 payload에서 user_id를 가져온다.
-    const { user_id } = jwt.verify(authAccessToken, "access-secret-key");
+    const { user_id } = jwt.verify(authAccessToken, process.env.ACCESS_KEY);
     const user = await Users.findOne({ where: { user_id: user_id } });
     res.locals.user = user;
 
@@ -73,9 +71,9 @@ module.exports = async (req, res, next) => {
 const createAccessToken = (accessTokenId) => {
   const accessToken = jwt.sign(
     { user_id: accessTokenId },
-    "access-secret-key",
+    process.env.ACCESS_KEY,
     {
-      expiresIn: "1h",
+      expiresIn: process.env.ACCESS_EXPIRES,
     }
   );
   return accessToken;
@@ -84,7 +82,7 @@ const createAccessToken = (accessTokenId) => {
 // access token 검증 함수
 const validateAccessToken = (authAccessToken) => {
   try {
-    jwt.verify(authAccessToken, "access-secret-key");
+    jwt.verify(authAccessToken, process.env.ACCESS_KEY);
     return true;
   } catch (error) {
     return false;
@@ -94,7 +92,7 @@ const validateAccessToken = (authAccessToken) => {
 // refresh token 검증 함수
 const validateRefreshToken = (authRefreshToken) => {
   try {
-    jwt.verify(authRefreshToken, "refresh-secret-key");
+    jwt.verify(authRefreshToken, process.env.REFRESH_KEY);
     return true;
   } catch (error) {
     return false;
