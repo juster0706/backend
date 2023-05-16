@@ -77,7 +77,7 @@ class PostController {
   getPostById = async (req, res) => {
     try {
       const { post_id } = req.params;
-      const post = await postsService.getPostById(post_id);
+      const post = await postService.getPostById(post_id);
       res.json({ data: post });
     } catch (err) {
       console.error(err);
@@ -91,7 +91,7 @@ class PostController {
       const { post_id } = req.params;
       const { title, content, price, location } = req.body;
       const { photo_url } = req;
-      await postsService.updatePost(user_id, post_id, title, content, price, location, photo_url);
+      await postService.updatePost(user_id, post_id, title, content, price, location, photo_url);
       res.status(200).json({ message: "게시글을 수정하였습니다." });
     } catch (err) {
       console.error(err);
