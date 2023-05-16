@@ -39,6 +39,12 @@ class UserService {
     return signupData;
   };
 
+  // 회원탈퇴 API
+  deleteSignup = async (user_id) => {
+    await this.userRepository.deleteSignup(user_id);
+    return;
+  };
+
   // 로그인 가능한 회원인지 확인
   loginUser = async (nickname) => {
     const loginUser = await this.userRepository.login(nickname);
