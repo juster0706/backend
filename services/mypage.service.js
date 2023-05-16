@@ -16,18 +16,19 @@ class MypageService {
   };
 
   products = async (user_id, pagination) => {
-    const products = await this.mypageRepository.products(user_id, pagination);
-
-    return products;
-  };
-
-  sold_products = async (user_id, pagination) => {
-    const sold_products = await this.mypageRepository.sold_products(
+    const { totalPages, product_list } = await this.mypageRepository.products(
       user_id,
       pagination
     );
 
-    return sold_products;
+    return { totalPages, product_list };
+  };
+
+  sold_products = async (user_id, pagination) => {
+    const { totalPages, sold_products } =
+      await this.mypageRepository.sold_products(user_id, pagination);
+
+    return { totalPages, sold_products };
   };
 
   updated_info = async (
@@ -59,8 +60,13 @@ class MypageService {
   //     email
   //   );
   // };
-  checked_product = async (post_id) => {
-    return await this.mypageRepository.checked_product(post_id, user_id);
+  checked_product = async (post_id, user_id) => {
+    const checked = await this.mypageRepository.checked_product(
+      post_id,
+      user_id
+    );
+
+    return checked;
   };
 }
 module.exports = MypageService;

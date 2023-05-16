@@ -1,6 +1,7 @@
 // const nodemailer = require("nodemailer");
 // const redis = require("redis");
 // const bcrypt = require("bcryptjs");
+// const { UserInfos } = require("../models");
 // const redisClient = redis.createClient({
 //   host: process.env.REDIS_HOST,
 //   port: process.env.REDIS_PORT,
@@ -32,10 +33,9 @@
 
 //   async generateVerificationCode() {
 //     const plainCode = Math.floor(100 + Math.random() * 900).toString();
-//     const saltRounds = 10;
+
 //     try {
-//       const hash = await bcrypt.hash(plainCode, saltRounds);
-//       return hash;
+//       return plainCode;
 //     } catch (error) {
 //       console.error("Error generating verification code:", error);
 //       throw error;
@@ -55,28 +55,39 @@
 //         console.error("Error sending email:", error);
 //       } else {
 //         console.log("Email sent successfully:", info.response);
-//         // Store the verification code in Redis
+//         console.log(typeof verificationCode);
 //         redisClient.set(email, verificationCode.toString(), "EX", 600); // Set expiration time of 10 minutes (600 seconds)
 //       }
 //     });
 //     return "success";
 //   };
 
-//   receive_email = async (verified_number, email) => {
-//     const storedCode = await redisClient.get(email);
-//     console.log(typeof storedCode);
-//     if (!storedCode) {
-//       // Verification code has expired or does not exist
-//       return false;
-//     }
-//     console.log(verified_number, storedCode);
-//     // /const isCodeValid = await bcrypt.compare(verified_number, storedCode);
-//     if (verified_number === storedCode) {
-//       // update currentStatus of Post
-//       // Remove the verification code from Redis
+//   receive_email = async (verified_number, email, user_id) => {
+//     const storedCode = await new Promise((resolve, reject) => {
+//       redisClient.get(email, (error, value) => {
+//         if (error) {
+//           reject(error);
+//           return;
+//         }
+//         if (!value) {
+//           resolve(false);
+//           return;
+//         }
+//         console.log(verified_number, value);
+//         if (verified_number === value) {
+//           resolve(true);
+//         } else {
+//           resolve(false);
+//         }
+//       });
+//     });
+
+//     console.log(storedCode);
+//     if (storedCode === true) {
+//       await UserInfos.update({ auth: true }, { where: { user_id: user_id } });
 //       await redisClient.del(email);
 //     }
-//     return isCodeValid;
+//     return storedCode;
 //   };
 // }
 

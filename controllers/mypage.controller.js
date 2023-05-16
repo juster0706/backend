@@ -26,11 +26,11 @@ class MyPage {
     const { user_id } = res.locals.user;
 
     try {
-      const products = await this.mypageService.products(
+      const { totalPages, product_list } = await this.mypageService.products(
         user_id,
         req.pagination
       );
-      return res.status(200).json({ products });
+      return res.status(200).json({ totalPages, product_list });
     } catch (e) {
       res.status(400).json({
         errorMessage: "마이페이지 판매중조회에 오류가 발생하였습니다.",
@@ -42,12 +42,10 @@ class MyPage {
     const { user_id } = res.locals.user;
 
     try {
-      const sold_products = await this.mypageService.sold_products(
-        user_id,
-        req.pagination
-      );
+      const { totalPages, sold_products } =
+        await this.mypageService.sold_products(user_id, req.pagination);
 
-      return res.status(200).json({ sold_products });
+      return res.status(200).json({ totalPages, sold_products });
     } catch (e) {
       res.status(400).json({
         errorMessage: "마이페이지 거래완료 조회에 오류가 발생하였습니다.",
