@@ -32,8 +32,7 @@ class PostService {
             photo_url: item.photo_url,
             current_status: item.current_status,
           };
-          const likeCount = await postRepository.getLikeCount(item.post_id);
-          post.likeCount = likeCount;
+
           return post;
         })
       );
