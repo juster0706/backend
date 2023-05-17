@@ -160,8 +160,8 @@ class UserController {
       // Tokens table에 refresh token 저장
       await this.userService.saveToken(loginUser, refreshToken);
 
-      res.cookie("Accesstoken", `Bearer ${accessToken}`);
-      res.cookie("Refreshtoken", `Bearer ${refreshToken}`);
+      res.cookie("accesstoken", `Bearer ${accessToken}`);
+      res.cookie("refreshtoken", `Bearer ${refreshToken}`);
 
       return res.status(200).json({ accessToken, refreshToken });
     } catch (error) {
@@ -176,8 +176,8 @@ class UserController {
     try {
       // logout했을때 db에서 refresh token 제거
       await this.userService.logout(user_id);
-      res.clearCookie("AccessToken");
-      res.clearCookie("RefreshToken");
+      res.clearCookie("accesstoken");
+      res.clearCookie("refreshtoken");
 
       return res.status(200).json({ message: "로그아웃에 성공하였습니다." });
     } catch (error) {
