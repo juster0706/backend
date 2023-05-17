@@ -49,20 +49,22 @@
   
   /* 내가 보낸 메시지 */
   .me {
-    width: 90%;
+    width: 45%;
     margin: auto;
     background-color: rgb(202, 142, 107);
     border-radius: 5px;
     text-align : right;
     margin-top: 10px;
+    margin-right: 15px;    
   }
   
   /* 상대방이 보낸 메시지 */
   .other {
-    width: 90%;
+    width: 45%;
     margin: auto;
     background-color: rgb(189, 189, 189);
     border-radius: 5px;
     text-align : left;
     margin-top: 10px;
+    margin-left: 15px;    
   }

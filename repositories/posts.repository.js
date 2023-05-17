@@ -45,8 +45,7 @@ class PostRepository {
       current_status: item.current_status,
     };
   
-    const likeCount = await Likes.count({ post_id: item.post_id });
-    post.likeCount = likeCount;
+
   
     return post;
   };
