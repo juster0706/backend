@@ -5,20 +5,22 @@ const TokenRepository = require("../repositories/tokens.repository");
 const tokenRepository = new TokenRepository();
 
 module.exports = async (req, res, next) => {
-  let { accessToken, refreshToken } = req.headers;
-
+  let { Accesstoken, Refreshtoken } = req.headers;
+  console.log(req.headers);
+  console.log(Accesstoken);
+  console.log(Refreshtoken);
   // const { AccessToken, RefreshToken } = req.cookies;
   try {
-    accessToken = !req.headers.refreshToken
-      ? req.cookies.accessToken
-      : accessToken;
+    Accesstoken = !req.headers.Refreshtoken
+      ? req.cookies.Accesstoken
+      : Accesstoken;
 
-    refreshToken = !req.headers.refreshToken
-      ? req.cookies.refreshToken
-      : refreshToken;
+    Refreshtoken = !req.headers.Refreshtoken
+      ? req.cookies.Refreshtoken
+      : Refreshtoken;
 
-    const [authAccessType, authAccessToken] = (accessToken ?? "").split(" ");
-    const [authRefreshType, authRefreshToken] = (refreshToken ?? "").split(" ");
+    const [authAccessType, authAccessToken] = (Accesstoken ?? "").split(" ");
+    const [authRefreshType, authRefreshToken] = (Refreshtoken ?? "").split(" ");
 
     // access token 존재하지 않을때
     if (authRefreshType !== "Bearer" || !authRefreshToken) {
@@ -55,7 +57,7 @@ module.exports = async (req, res, next) => {
       const newAccessToken = createAccessToken(accessTokenId);
 
       // 새로운 access token Responce
-      res.cookie("AccessToken", `Bearer ${newAccessToken}`);
+      res.cookie("Accesstoken", `Bearer ${newAccessToken}`);
       return res.status(200).json({ newAccessToken });
     }
 
@@ -67,8 +69,8 @@ module.exports = async (req, res, next) => {
     next();
   } catch (error) {
     console.error(error);
-    res.clearCookie("AccessToken");
-    res.clearCookie("RefreshToken");
+    res.clearCookie("Accesstoken");
+    res.clearCookie("Refreshtoken");
     return res
       .status(403)
       .json({ errorMessage: "전달된 쿠키에서 오류가 발생하였습니다." });
