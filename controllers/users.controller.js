@@ -160,8 +160,8 @@ class UserController {
       // Tokens table에 refresh token 저장
       await this.userService.saveToken(loginUser, refreshToken);
 
-      res.cookie("AccessToken", `Bearer ${accessToken}`);
-      res.cookie("RefreshToken", `Bearer ${refreshToken}`);
+      res.cookie("accessToken", `Bearer ${accessToken}`);
+      res.cookie("refreshToken", `Bearer ${refreshToken}`);
 
       return res.status(200).json({ accessToken, refreshToken });
     } catch (error) {
