@@ -19,7 +19,8 @@ module.exports = async (req, res, next) => {
     refreshtoken = !req.headers.refreshtoken
       ? req.cookies.refreshtoken
       : refreshtoken;
-
+    console.log(accesstoken);
+    console.log(refreshtoken);
     const [authAccessType, authAccessToken] = (accesstoken ?? "").split(" ");
     const [authRefreshType, authRefreshToken] = (refreshtoken ?? "").split(" ");
 
