@@ -32,6 +32,12 @@ class UserRepository {
     return signupData;
   };
 
+  // 회원탈퇴
+  deleteSignup = async (user_id) => {
+    await Users.destroy({ where: { user_id } });
+    return;
+  };
+
   // 로그인 정보
   login = async (nickname) => {
     const loginUser = await Users.findOne({ where: { nickname } });
