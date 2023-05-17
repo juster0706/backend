@@ -23,25 +23,30 @@ app.use("/css", express.static("./static/css"));
 app.use("/js", express.static("./static/js"));
 
 io.on("connection", (socket) => {
-  socket.on("newUser", (name) => {
-    console.log(name + "님이 접속하셨습니다.");
+  socket.on("newUser", (name, room) => {
+    console.log(`${name}님이 ${room}에 접속하셨습니다.`);
     socket.name = name;
-    io.sockets.emit("update", {
+    socket.room = room;
+    socket.join(room);
+
+    io.to(socket.room).emit("update", {
       type: "connect",
-      name: "SERVER",
-      message: name + "님이 접속하셨습니다.",
+      name: "POTATO MASTER",
+      message: `${name}님이 ${room}에 접속하셨습니다.`,
     });
   });
 
   socket.on("message", (data) => {
+    data.id = socket.id;
     data.name = socket.name;
+    data.room = socket.room;
     console.log("서버2", data);
-    socket.broadcast.emit("update", data);
+    socket.broadcast.to(socket.room).emit("update", data);
   });
 
   socket.on("disconnect", () => {
     console.log(socket.name + "님이 나가셨습니다.");
-    socket.broadcast.emit("update", {
+    io.to(socket.room).emit("update", {
       type: "disconnect",
       name: "SERVER",
       message: socket.name + "님이 나가셨습니다.",
