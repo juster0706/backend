@@ -5,20 +5,22 @@ const TokenRepository = require("../repositories/tokens.repository");
 const tokenRepository = new TokenRepository();
 
 module.exports = async (req, res, next) => {
-  let { accessToken, refreshToken } = req.headers;
-
+  let { Accesstoken, Refreshtoken } = req.headers;
+  console.log(req.headers);
+  console.log(Accesstoken);
+  console.log(Refreshtoken);
   // const { AccessToken, RefreshToken } = req.cookies;
   try {
-    accessToken = !req.headers.refreshToken
-      ? req.cookies.accessToken
-      : accessToken;
+    Accesstoken = !req.headers.Refreshtoken
+      ? req.cookies.Accesstoken
+      : Accesstoken;
 
-    refreshToken = !req.headers.refreshToken
-      ? req.cookies.refreshToken
-      : refreshToken;
+    Refreshtoken = !req.headers.Refreshtoken
+      ? req.cookies.Refreshtoken
+      : Refreshtoken;
 
-    const [authAccessType, authAccessToken] = (accessToken ?? "").split(" ");
-    const [authRefreshType, authRefreshToken] = (refreshToken ?? "").split(" ");
+    const [authAccessType, authAccessToken] = (Accesstoken ?? "").split(" ");
+    const [authRefreshType, authRefreshToken] = (Refreshtoken ?? "").split(" ");
 
     // access token 존재하지 않을때
     if (authRefreshType !== "Bearer" || !authRefreshToken) {
