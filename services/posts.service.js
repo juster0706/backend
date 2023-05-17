@@ -38,28 +38,42 @@ class PostService {
     }
   }
 
-  getBestPosts = async () => {
-    const posts = await postRepository.getPosts();
-    const results = await Promise.all(
-      posts.map(async (item) => {
-        return await postRepository.getPosts(item);
-      })
-    );
 
-    if (results.length === 0) {
-      throw new Error("아직 게시물이 존재하지 않습니다.");
+  
+  async getBestPosts() {
+    try {
+      const posts = await postRepository.getPosts();
+  
+      posts.sort((a, b) => b.likes - a.likes);
+      const topTwentyPosts = posts.slice(0, 20);
+  
+      const results = await Promise.all(
+        topTwentyPosts.map(async (item) => {
+          const bestPosts = {
+            post_id: item.post_id,
+            user_id: item.user_id,
+            nickname: item.nickname,
+            title: item.title,
+            content: item.content,
+            likes: item.likes,
+            views: item.views,
+            price: item.price,
+            createdAt: item.createdAt,
+            updatedAt: item.updatedAt,
+            photo_url: item.photo_url,
+            current_status: item.current_status,
+            commentCount: null,
+          };
+  
+          return bestPosts;
+        })
+      );
+      return results;
+    } catch (error) {
+      return { error: true, message: error.message };
     }
-
-    let bestPosts;
-    if (results.length < 20) {
-      bestPosts = results;
-    } else {
-      const sortedPosts = results.sort((a, b) => b.likeCount - a.likeCount);
-      bestPosts = sortedPosts.slice(0, 20);
-    }
-
-    return bestPosts;
   };
+
 
   getPostById = async (post_id) => {
     const post = await postRepository.findPostById(post_id);
