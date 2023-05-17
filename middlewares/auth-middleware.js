@@ -6,6 +6,7 @@ const tokenRepository = new TokenRepository();
 
 module.exports = async (req, res, next) => {
   let { accessToken, refreshToken } = req.headers;
+
   // const { AccessToken, RefreshToken } = req.cookies;
   try {
     accessToken = !req.headers.refreshToken
