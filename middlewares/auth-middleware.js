@@ -57,7 +57,7 @@ module.exports = async (req, res, next) => {
       const newAccessToken = createAccessToken(accessTokenId);
 
       // 새로운 access token Responce
-      res.cookie("AccessToken", `Bearer ${newAccessToken}`);
+      res.cookie("Accesstoken", `Bearer ${newAccessToken}`);
       return res.status(200).json({ newAccessToken });
     }
 
@@ -69,8 +69,8 @@ module.exports = async (req, res, next) => {
     next();
   } catch (error) {
     console.error(error);
-    res.clearCookie("AccessToken");
-    res.clearCookie("RefreshToken");
+    res.clearCookie("Accesstoken");
+    res.clearCookie("Refreshtoken");
     return res
       .status(403)
       .json({ errorMessage: "전달된 쿠키에서 오류가 발생하였습니다." });
