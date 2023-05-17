@@ -5,22 +5,23 @@ const TokenRepository = require("../repositories/tokens.repository");
 const tokenRepository = new TokenRepository();
 
 module.exports = async (req, res, next) => {
-  let { Accesstoken, Refreshtoken } = req.headers;
+  let { accesstoken, refreshtoken } = req.headers;
   console.log(req.headers);
-  console.log(Accesstoken);
-  console.log(Refreshtoken);
+  console.log(accesstoken);
+  console.log(refreshtoken);
+
   // const { AccessToken, RefreshToken } = req.cookies;
   try {
-    Accesstoken = !req.headers.Refreshtoken
-      ? req.cookies.Accesstoken
-      : Accesstoken;
+    accesstoken = !req.headers.refreshtoken
+      ? req.cookies.accesstoken
+      : accesstoken;
 
-    Refreshtoken = !req.headers.Refreshtoken
-      ? req.cookies.Refreshtoken
-      : Refreshtoken;
+    refreshtoken = !req.headers.refreshtoken
+      ? req.cookies.refreshtoken
+      : refreshtoken;
 
-    const [authAccessType, authAccessToken] = (Accesstoken ?? "").split(" ");
-    const [authRefreshType, authRefreshToken] = (Refreshtoken ?? "").split(" ");
+    const [authAccessType, authAccessToken] = (accesstoken ?? "").split(" ");
+    const [authRefreshType, authRefreshToken] = (refreshtoken ?? "").split(" ");
 
     // access token 존재하지 않을때
     if (authRefreshType !== "Bearer" || !authRefreshToken) {
@@ -57,7 +58,7 @@ module.exports = async (req, res, next) => {
       const newAccessToken = createAccessToken(accessTokenId);
 
       // 새로운 access token Responce
-      res.cookie("Accesstoken", `Bearer ${newAccessToken}`);
+      res.cookie("accesstoken", `Bearer ${newAccessToken}`);
       return res.status(200).json({ newAccessToken });
     }
 
@@ -69,8 +70,8 @@ module.exports = async (req, res, next) => {
     next();
   } catch (error) {
     console.error(error);
-    res.clearCookie("Accesstoken");
-    res.clearCookie("Refreshtoken");
+    res.clearCookie("accesstoken");
+    res.clearCookie("refreshtoken");
     return res
       .status(403)
       .json({ errorMessage: "전달된 쿠키에서 오류가 발생하였습니다." });
