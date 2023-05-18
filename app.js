@@ -32,7 +32,7 @@ io.on("connection", (socket) => {
     io.to(socket.room).emit("update", {
       type: "connect",
       name: "POTATO MASTER",
-      message: `${name}님이 ${room}에 접속하셨습니다.`,
+      message: `${name}님이 ${room}님과의 채팅방에 접속하셨습니다.`,
     });
   });
 
@@ -45,13 +45,21 @@ io.on("connection", (socket) => {
   });
 
   socket.on("disconnect", () => {
-    console.log(socket.name + "님이 나가셨습니다.");
+    console.log(`${socket.name} 님이 나가셨습니다.`);
     io.to(socket.room).emit("update", {
       type: "disconnect",
-      name: "SERVER",
-      message: socket.name + "님이 나가셨습니다.",
+      name: "POTATO MASTER",
+      message: `${socket.name} 님이 나가셨습니다.`,
     });
   });
+
+  // socket.on("message read", (messageId) => {
+  //   const message = {
+  //     id: messageId,
+  //     read: true,
+  //   };
+  //   io.emit("message read", message);
+  // });
 });
 
 // cors
