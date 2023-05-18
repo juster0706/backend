@@ -2,9 +2,10 @@ const { ref } = require("joi");
 const UserRepository = require("../repositories/users.repository");
 const TokenRepository = require("../repositories/tokens.repository");
 const jwt = require("jsonwebtoken");
+const { Users } = require("../models");
 
 class UserService {
-  userRepository = new UserRepository();
+  userRepository = new UserRepository(Users);
   tokenRepository = new TokenRepository();
 
   // 중복되는 닉네임 찾기
