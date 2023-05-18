@@ -14,7 +14,11 @@
     <div id="main">
       <div id="chat"></div>
       <div id="chat2">
-        <input type="text" id="test" placeholder="메시지를 입력해주세요" />
+        <input
+          type="text"
+          id="test"
+          placeholder="메시지를 입력해주세요"
+          onkeydown="handleKeyDown(event)" />
         <button onclick="send()">전송</button>
       </div>
     </div>
