@@ -1,18 +1,10 @@
 const express = require("express");
 const router = express.Router();
 const authMiddleware = require("../middlewares/auth-middleware");
-const fs = require("fs");
+const ChatController = require("../controllers/chat.controller");
+const chatController = new ChatController();
 
-router.get("/", (req, res) => {
-  fs.readFile("./static/index.html", (err, data) => {
-    if (err) {
-      res.send("오류났음");
-    } else {
-      res.writeHead(200, { "Content-Type": "text/html" });
-      res.write(data);
-      res.end();
-    }
-  });
-});
+router.get("/", chatController.chat);
+// router.get("/:post_id", authMiddleware, chatController.chat);
 
 module.exports = router;
