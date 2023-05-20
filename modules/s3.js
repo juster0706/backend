@@ -14,7 +14,7 @@ const s3 = new aws.S3({
 
 
 
-const allowedExtensions = ['.png', '.jpg', '.jpeg', '.bmp', '.gif'];
+const allowedExtensions = ['.png', '.jpg', '.jpeg', '.bmp', '.gif', ];
 
 
 
